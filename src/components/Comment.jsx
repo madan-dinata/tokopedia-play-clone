@@ -7,7 +7,7 @@ import { useState } from "react"
 import axios from "axios"
 import { useEffect } from "react"
 import { io } from "socket.io-client"
-import FormatDate from "../utils/formatDate"
+import FormatDateTime from "../utils/FormatDateTime"
 
 export default function Comment({ id }) {
   const [comments, setComments] = useState([])
@@ -86,7 +86,7 @@ export default function Comment({ id }) {
                     {comment.comment}
                   </Text>
                   <Text pt="" fontSize="xs" color="gray.500">
-                    {FormatDate(comment.updatedAt)}
+                    {FormatDateTime(comment.updatedAt)}
                   </Text>
                 </Box>
               ))}
