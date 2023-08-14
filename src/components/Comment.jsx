@@ -7,7 +7,6 @@ import { useState } from "react"
 import axios from "axios"
 import { useEffect } from "react"
 import { io } from "socket.io-client"
-import FormatDateTime from "../utils/FormatDateTime"
 
 export default function Comment({ id }) {
   const [comments, setComments] = useState([])
@@ -63,6 +62,25 @@ export default function Comment({ id }) {
     }
   }
 
+  function formatDateTime(dateTimeString) {
+    const dateTime = new Date(dateTimeString)
+    const now = new Date()
+    const timeDiff = now - dateTime
+
+    if (timeDiff < 24 * 60 * 60 * 1000) {
+      const hoursAgo = Math.floor(timeDiff / (60 * 60 * 1000))
+      if (hoursAgo > 0) {
+        return `${hoursAgo} jam yang lalu`
+      } else {
+        const minutesAgo = Math.floor(timeDiff / (60 * 1000))
+        return `${minutesAgo} menit yang lalu`
+      }
+    } else {
+      const options = { year: "numeric", month: "long", day: "numeric" }
+      return dateTime.toLocaleDateString(undefined, options)
+    }
+  }
+
   return (
     <>
       <Card className="h-full">
@@ -86,7 +104,7 @@ export default function Comment({ id }) {
                     {comment.comment}
                   </Text>
                   <Text pt="" fontSize="xs" color="gray.500">
-                    {FormatDateTime(comment.updatedAt)}
+                    {formatDateTime(comment.updatedAt)}
                   </Text>
                 </Box>
               ))}
