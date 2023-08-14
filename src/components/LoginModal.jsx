@@ -29,7 +29,6 @@ export default function LoginModal() {
       navigate(0)
     } catch (error) {
       setError(error.response.data.message)
-      console.error(error.response.data.message)
       setTimeout(() => {
         setError("")
       }, 2000)
