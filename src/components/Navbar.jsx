@@ -1,21 +1,42 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-import { Box, Flex, Avatar, Button, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorModeValue, Stack, useColorMode, Center } from "@chakra-ui/react"
+import { Box, Flex, Text, Avatar, Button, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorModeValue, Stack, useColorMode, Center } from "@chakra-ui/react"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Link } from "react-router-dom"
+import { useState } from "react"
+import { useEffect } from "react"
+import axios from "axios"
+import LoginModal from "./LoginModal"
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode()
+  const [data, setData] = useState("")
+
+  const getMe = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/v1/me", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      setData(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    getMe()
+  }, [])
 
   const logout = () => {
     localStorage.removeItem("accessToken")
-    window.location.replace("/")
   }
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={10} className="fixed w-screen top-0 z-10">
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Link to="/home">
+          <Link to="/">
             <Box className="text-lg antialiased font-bold font-serif">Tokopedia Play</Box>
           </Link>
 
@@ -24,22 +45,33 @@ export default function Navbar() {
               <Button onClick={toggleColorMode}>{colorMode === "light" ? <MoonIcon /> : <SunIcon />}</Button>
 
               <Menu>
-                <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
-                  <Avatar size={"sm"} src={"https://cdn-icons-png.flaticon.com/128/456/456212.png"} className="border-2" />
-                </MenuButton>
-                <MenuList alignItems={"center"}>
-                  <br />
-                  <Center>
-                    <Avatar size={"2xl"} src={"https://cdn-icons-png.flaticon.com/128/456/456212.png"} />
-                  </Center>
-                  <br />
-                  <Center>
-                    <p>Muhammad Ramadhan</p>
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <MenuItem onClick={logout}>Logout</MenuItem>
-                </MenuList>
+                {!localStorage.getItem("accessToken") ? (
+                  <Flex alignItems="center">
+                    <LoginModal />
+                  </Flex>
+                ) : (
+                  <>
+                    <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
+                      <Flex alignItems="center">
+                        <Text mr={2}>{data.username}</Text>
+                        <Avatar size={"sm"} src={data.urlImage} className="border !border-white" />
+                      </Flex>
+                    </MenuButton>
+                    <MenuList alignItems={"center"}>
+                      <br />
+                      <Center>
+                        <Avatar size={"2xl"} src={data.urlImage} />
+                      </Center>
+                      <br />
+                      <Center>
+                        <p>{data.username}</p>
+                      </Center>
+                      <br />
+                      <MenuDivider />
+                      <MenuItem onClick={logout}>Logout</MenuItem>
+                    </MenuList>
+                  </>
+                )}
               </Menu>
             </Stack>
           </Flex>

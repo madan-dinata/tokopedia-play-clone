@@ -73,7 +73,7 @@ export default function Comment({ id }) {
           </Text>
         </CardHeader>
         <Heading size="xs" className="px-5 mb-3">
-          Comments
+          Comments ({comments.length})
         </Heading>
         <hr />
         <CardBody className="overflow-y-auto">
@@ -93,14 +93,18 @@ export default function Comment({ id }) {
           </Stack>
         </CardBody>
         <CardFooter className="border-t-2">
-          <InputGroup size="sm">
-            <Input type="text" placeholder="Add Comment..." border="1px solid #949494" value={newComment} onChange={(e) => setNewComment(e.target.value)} />
-            <InputRightAddon p={0} border="none">
-              <Button size="sm" borderLeftRadius={0} borderRightRadius={3.3} border="1px solid #949494" onClick={handleComment}>
-                Send
-              </Button>
-            </InputRightAddon>
-          </InputGroup>
+          {localStorage.getItem("accessToken") ? (
+            <InputGroup size="sm">
+              <Input type="text" placeholder="Add Comment..." border="1px solid #949494" value={newComment} onChange={(e) => setNewComment(e.target.value)} />
+              <InputRightAddon p={0} border="none">
+                <Button size="sm" borderLeftRadius={0} borderRightRadius={3.3} border="1px solid #949494" onClick={handleComment}>
+                  Send
+                </Button>
+              </InputRightAddon>
+            </InputGroup>
+          ) : (
+            <p className="text=gray-200">Login terlebih dahulu untuk berkomentar.</p>
+          )}
         </CardFooter>
       </Card>
     </>
