@@ -31,14 +31,6 @@ export default function Detail() {
       <div className="mt-20 grid grid-cols-12 gap-2 px-10 mb-5 h-[480px]">
         <div className="col-span-8">
           {videosId && (
-            // <iframe
-            //   height="480"
-            //   src={`https://www.youtube.com/embed/${videosId.urlVideo}`}
-            //   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            //   allowFullScreen
-            //   title={`${videosId.title}`}
-            //   className="w-full"
-            // />
             <iframe
               className="w-full h-full"
               src={`https://www.youtube.com/embed/${videosId.urlVideo}`}
