@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import { Box, Flex, Text, Avatar, Button, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorModeValue, Stack, useColorMode, Center } from "@chakra-ui/react"
@@ -5,20 +6,16 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons"
 import { Link } from "react-router-dom"
 import { useState } from "react"
 import { useEffect } from "react"
-import axios from "axios"
 import LoginModal from "./LoginModal"
+import { getMe } from "../api/axios"
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode()
   const [data, setData] = useState("")
 
-  const getMe = async () => {
+  const handleGetMe = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/v1/me", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
+      const data = await getMe()
       setData(data)
     } catch (error) {
       console.error(error)
@@ -26,11 +23,12 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    getMe()
+    handleGetMe()
   }, [])
 
   const logout = () => {
     localStorage.removeItem("accessToken")
+    window.location.reload()
   }
   return (
     <>

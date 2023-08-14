@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button, useDisclosure, FormLabel, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
-import axios from "axios"
+import { login, register } from "../api/axios.js"
 
 export default function LoginModal() {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -13,29 +13,24 @@ export default function LoginModal() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const login = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const { data } = await axios.post("http://localhost:5000/api/v1/login", {
-        username: username,
-        password: password,
-      })
+      const data = await login(username, password)
       localStorage.setItem("accessToken", data)
       setUsername("")
       setPassword("")
       onClose()
+      window.location.reload()
     } catch (error) {
       console.error(error)
     }
   }
 
-  const register = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault()
     try {
-      await axios.post("http://localhost:5000/api/v1/register", {
-        username: username,
-        password: password,
-      })
+      await register(username, password)
       setUsername("")
       setPassword("")
       onClose()
@@ -65,7 +60,7 @@ export default function LoginModal() {
           <ModalBody pb={6}>
             {overlay === "login" ? (
               // Form for login
-              <form className="mb-3" onSubmit={login}>
+              <form className="mb-3" onSubmit={handleLogin}>
                 <FormLabel id="username">Username</FormLabel>
                 <Input ref={initialRef} type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-5" />
                 <FormLabel>Password</FormLabel>
@@ -83,7 +78,7 @@ export default function LoginModal() {
               </form>
             ) : (
               // Form for registration
-              <form className="mb-3" onSubmit={register}>
+              <form className="mb-3" onSubmit={handleRegister}>
                 <FormLabel id="username">Username</FormLabel>
                 <Input ref={initialRef} type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-5" />
                 <FormLabel>Password</FormLabel>

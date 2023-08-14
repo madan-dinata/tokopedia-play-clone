@@ -2,16 +2,16 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Card, CardBody, Image, Stack, Text, ButtonGroup, Button } from "@chakra-ui/react"
-import axios from "axios"
 import { useEffect } from "react"
 import { useState } from "react"
+import { getProducts } from "../api/axios.js"
 
 export default function Product({ id }) {
   const [products, setProducts] = useState([])
 
-  const getProducts = async () => {
+  const productsGet = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/v1/products/${id}`)
+      const data = await getProducts(id)
       setProducts(data)
     } catch (error) {
       console.error(error)
@@ -19,7 +19,7 @@ export default function Product({ id }) {
   }
 
   useEffect(() => {
-    getProducts()
+    productsGet()
   }, [])
 
   return (

@@ -4,36 +4,36 @@
 /* eslint-disable react/prop-types */
 import { Card, CardHeader, CardBody, CardFooter, Heading, Stack, Box, StackDivider, Text, Button, Input, InputGroup, InputRightAddon } from "@chakra-ui/react"
 import { useState } from "react"
-import axios from "axios"
 import { useEffect } from "react"
 import { io } from "socket.io-client"
+import { getDescription, getComments, postComment } from "../api/axios.js"
 
 export default function Comment({ id }) {
   const [comments, setComments] = useState([])
   const [newComment, setNewComment] = useState("")
   const [desc, setDesc] = useState({})
 
-  const getDescription = async () => {
-    const { data } = await axios.get(`http://localhost:5000/api/v1/videos/${id}`)
+  const descriptionGet = async () => {
+    const data = await getDescription(id)
     setDesc(data)
   }
 
-  const socket = io(import.meta.env.VITE_SOME_HOST_SOCKET)
-
-  const getComments = async () => {
+  const commentsGet = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/v1/comments/${id}`)
+      const data = await getComments(id)
       setComments(data)
     } catch (error) {
       console.error(error)
     }
   }
 
+  const socket = io(import.meta.env.VITE_SOME_HOST_SOCKET)
+
   useEffect(() => {
-    getDescription()
-    getComments()
+    descriptionGet()
+    commentsGet()
     socket.on("from-server", () => {
-      getComments()
+      commentsGet()
     })
 
     return () => {
@@ -43,18 +43,7 @@ export default function Comment({ id }) {
 
   const handleComment = async () => {
     try {
-      await axios.post(
-        `http://localhost:5000/api/v1/comments/${id}`,
-        {
-          comment: newComment,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        }
-      )
-
+      await postComment(id, newComment)
       socket.emit("from-client", { id })
       setNewComment("")
     } catch (error) {

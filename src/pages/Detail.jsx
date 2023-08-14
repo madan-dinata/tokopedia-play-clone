@@ -30,14 +30,16 @@ export default function Detail() {
       <Navbar />
       <div className="mt-20 grid grid-cols-12 gap-2 px-10 mb-5 h-[480px]">
         <div className="col-span-8">
-          <iframe
-            height="480"
-            src={`https://www.youtube.com/embed/${videosId.urlVideo}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Embedded youtube"
-            className="w-full"
-          />
+          {videosId ? (
+            <iframe
+              height="480"
+              src={`https://www.youtube.com/embed/${videosId.urlVideo}`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={`${videosId.title}`}
+              className="w-full"
+            />
+          ) : null}
         </div>
         <div className="col-span-4 h-[480px]">
           <Comment id={id} />
