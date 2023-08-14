@@ -6,15 +6,15 @@ import Comment from "../components/Comment"
 import Product from "../components/Product"
 import { useEffect } from "react"
 import { useState } from "react"
-import axios from "axios"
+import { getVideosId } from "../api/axios"
 
 export default function Detail() {
   const { id } = useParams()
   const [videosId, setVideosId] = useState([])
 
-  const getVideosId = async () => {
+  const handleGetVideosId = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/v1/videos/${id}`)
+      const data = await getVideosId(id)
       setVideosId(data)
     } catch (error) {
       console.error(error)
@@ -22,7 +22,7 @@ export default function Detail() {
   }
 
   useEffect(() => {
-    getVideosId()
+    handleGetVideosId()
   }, [])
 
   return (
@@ -30,16 +30,23 @@ export default function Detail() {
       <Navbar />
       <div className="mt-20 grid grid-cols-12 gap-2 px-10 mb-5 h-[480px]">
         <div className="col-span-8">
-          {videosId ? (
+          {videosId && (
+            // <iframe
+            //   height="480"
+            //   src={`https://www.youtube.com/embed/${videosId.urlVideo}`}
+            //   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            //   allowFullScreen
+            //   title={`${videosId.title}`}
+            //   className="w-full"
+            // />
             <iframe
-              height="480"
+              className="w-full h-full"
               src={`https://www.youtube.com/embed/${videosId.urlVideo}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              title={`${videosId.title}`}
-              className="w-full"
             />
-          ) : null}
+          )}
         </div>
         <div className="col-span-4 h-[480px]">
           <Comment id={id} />

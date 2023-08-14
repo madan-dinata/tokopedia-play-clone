@@ -3,7 +3,7 @@ import { useState } from "react"
 import Header from "../components/Header"
 import Navbar from "../components/Navbar"
 import Thumbnail from "../components/Thumbnail"
-import useFetchData from "../hooks/useFetchData"
+import useFetchData from "../hooks/useFetchVideos"
 
 export default function Home() {
   const [query, setQuery] = useState("")

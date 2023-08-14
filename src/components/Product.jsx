@@ -4,7 +4,7 @@
 import { Card, CardBody, Image, Stack, Text, ButtonGroup, Button } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useState } from "react"
-import { getProducts } from "../api/axios.js"
+import { getProducts } from "../api/axios"
 
 export default function Product({ id }) {
   const [products, setProducts] = useState([])

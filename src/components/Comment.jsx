@@ -6,7 +6,7 @@ import { Card, CardHeader, CardBody, CardFooter, Heading, Stack, Box, StackDivid
 import { useState } from "react"
 import { useEffect } from "react"
 import { io } from "socket.io-client"
-import { getDescription, getComments, postComment } from "../api/axios.js"
+import { getDescription, getComments, postComment } from "../api/axios"
 
 export default function Comment({ id }) {
   const [comments, setComments] = useState([])

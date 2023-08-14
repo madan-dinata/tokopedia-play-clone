@@ -1,23 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { useState } from "react"
-import axios from "axios"
 import { useEffect } from "react"
 import { useDebounce } from "use-debounce"
+import { getVideos, getVideosBySearch } from "../api/axios"
 
 export default function useFetchData(query) {
   const [data, setData] = useState([])
   const [debouncedQuery] = useDebounce(query, 300)
   const [loading, setLoading] = useState(false)
 
-  const getVideos = async () => {
+  const videosGet = async () => {
     setLoading(true)
     try {
-      const { data } = await axios.get("http://localhost:5000/api/v1/videos", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
+      const data = await getVideos()
       setData(data)
     } catch (error) {
       console.error(error)
@@ -26,10 +22,10 @@ export default function useFetchData(query) {
     }
   }
 
-  const getVideosBySearch = async () => {
+  const videosBySearchGet = async () => {
     setLoading(true)
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/v1/videos/search?q=${debouncedQuery}`)
+      const data = await getVideosBySearch(debouncedQuery)
       setData(data)
     } catch (error) {
       console.error(error)
@@ -39,7 +35,7 @@ export default function useFetchData(query) {
   }
 
   useEffect(() => {
-    debouncedQuery ? getVideosBySearch() : getVideos()
+    debouncedQuery ? videosBySearchGet() : videosGet()
   }, [debouncedQuery])
 
   return { data, loading }

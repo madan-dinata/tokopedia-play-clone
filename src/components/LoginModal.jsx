@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button, useDisclosure, FormLabel, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
-import { login, register } from "../api/axios.js"
+import { login, register } from "../api/axios"
 
 export default function LoginModal() {
   const { isOpen, onOpen, onClose } = useDisclosure()
