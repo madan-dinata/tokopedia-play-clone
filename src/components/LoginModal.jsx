@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import { useRef, useState } from "react"
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button, useDisclosure, FormLabel, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
-import { login, register } from "../api/axios"
+import { postLogin, postRegister } from "../api/axios"
 import { useNavigate } from "react-router-dom"
+import { Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react"
 
 export default function LoginModal() {
   const navigate = useNavigate()
@@ -14,32 +16,41 @@ export default function LoginModal() {
   const handleClick = () => setShow(!show)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
 
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const data = await login(username, password)
+      const data = await postLogin(username, password)
       localStorage.setItem("accessToken", data)
       setUsername("")
       setPassword("")
       onClose()
       navigate(0)
     } catch (error) {
-      console.error(error)
+      setError(error.response.data.message)
+      console.error(error.response.data.message)
+      setTimeout(() => {
+        setError("")
+      }, 2000)
     }
   }
 
   const handleRegister = async (e) => {
     e.preventDefault()
     try {
-      await register(username, password)
+      await postRegister(username, password)
       setUsername("")
       setPassword("")
       onClose()
       setOverlay("login")
       onOpen()
     } catch (error) {
-      console.error(error)
+      setError(error.response.data.message)
+      console.error(error.response.data.message)
+      setTimeout(() => {
+        setError("")
+      }, 2000)
     }
   }
 
@@ -63,6 +74,7 @@ export default function LoginModal() {
             {overlay === "login" ? (
               // Form for login
               <form className="mb-3" onSubmit={handleLogin}>
+                <span className="text-red-700">{error}</span>
                 <FormLabel id="username">Username</FormLabel>
                 <Input ref={initialRef} type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-5" />
                 <FormLabel>Password</FormLabel>
@@ -81,6 +93,7 @@ export default function LoginModal() {
             ) : (
               // Form for registration
               <form className="mb-3" onSubmit={handleRegister}>
+                <span className="text-red-700">{error}</span>
                 <FormLabel id="username">Username</FormLabel>
                 <Input ref={initialRef} type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-5" />
                 <FormLabel>Password</FormLabel>

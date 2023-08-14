@@ -25,7 +25,7 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    handleGetMe()
+    localStorage.getItem("accessToken") ? handleGetMe() : null
   }, [])
 
   const logout = () => {

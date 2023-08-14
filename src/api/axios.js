@@ -24,12 +24,12 @@ export const postComment = async (id, comment) => {
   return data
 }
 
-export const login = async (username, password) => {
+export const postLogin = async (username, password) => {
   const { data } = await axios.post(`${BASE_URL}/login`, { username, password })
   return data
 }
 
-export const register = async (username, password) => {
+export const postRegister = async (username, password) => {
   const { data } = await axios.post(`${BASE_URL}/register`, { username, password })
   return data
 }
