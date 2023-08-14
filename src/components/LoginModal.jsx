@@ -1,8 +1,10 @@
 import { useRef, useState } from "react"
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Button, useDisclosure, FormLabel, Input, InputGroup, InputRightElement } from "@chakra-ui/react"
 import { login, register } from "../api/axios"
+import { useNavigate } from "react-router-dom"
 
 export default function LoginModal() {
+  const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [overlay, setOverlay] = useState("login")
 
@@ -21,7 +23,7 @@ export default function LoginModal() {
       setUsername("")
       setPassword("")
       onClose()
-      window.location.reload()
+      navigate(0)
     } catch (error) {
       console.error(error)
     }

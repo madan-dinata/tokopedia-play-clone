@@ -8,8 +8,10 @@ import { useState } from "react"
 import { useEffect } from "react"
 import LoginModal from "./LoginModal"
 import { getMe } from "../api/axios"
+import { useNavigate } from "react-router-dom"
 
 export default function Navbar() {
+  const navigate = useNavigate()
   const { colorMode, toggleColorMode } = useColorMode()
   const [data, setData] = useState("")
 
@@ -28,7 +30,7 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.removeItem("accessToken")
-    window.location.reload()
+    navigate(0)
   }
   return (
     <>
